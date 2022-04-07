@@ -1,0 +1,20 @@
+1. Show the structure of your codes
+
+nlp_lab2_hoyongkim_20212036/
+├── code
+│   ├── main.py
+│   ├── network.py
+│   └── utils.py
+├── command.txt
+├── data
+│   ├── sent_class.test.csv
+│   └── sent_class.train.csv
+├── README.md
+└── result
+    └── sent_class.pred.csv
+
+
+2. Give the example command to reproduce your result
+
+$ python main.py --data-dir ../data --res-dir ../result --max-len-w 10 --max-len-s 20 --char-dim 100 --lr 0.001 --n_epochs 100 --batch-size 32
+
