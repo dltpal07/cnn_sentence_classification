@@ -74,7 +74,6 @@ def make_char_dict(lemmas):
 	sum_lemmas = list(sum_lemmas)
 	char_list = list(set(sum_lemmas))
 	char_list.sort()
-	print(char_list)
 	idx = 2
 	for char in char_list:
 		char_dict[char] = idx

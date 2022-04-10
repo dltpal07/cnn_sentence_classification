@@ -14,7 +14,7 @@ parser.add_argument('--lr', default=0.0001, type=float)
 args = parser.parse_args()
 device = torch.device(f'cuda:{args.gpu_num}')
 result_path = '../result'
-isDebug = True
+isDebug = False
 
 def output2csv(pred_y, file_name=os.path.join(result_path, 'sent_class.pred.csv')):
     os.makedirs(result_path, exist_ok=True)
@@ -87,17 +87,17 @@ if __name__ == '__main__':
     ts_sents, ts_labels = utils.load_data(file_path='../data/sent_class.test.csv')
     if isDebug: print('load_data:', tr_sents[:3])
 
-    # # tokenization
+    # tokenization
     tr_tokens = utils.tokenization(tr_sents)
     ts_tokens = utils.tokenization(ts_sents)
     if isDebug: print('tokenization:', tr_tokens[:3])
-    #
-    # # lemmatization
+
+    # lemmatization
     tr_lemmas = utils.lemmatization(tr_tokens)
     ts_lemmas = utils.lemmatization(ts_tokens)
     if isDebug: print('lemmatization:', tr_lemmas[:3])
-    #
-    # # character one-hot representation
+
+    # character one-hot representation
     char_dict = utils.make_char_dict(tr_lemmas)
     vocab_size = char_dict.__len__()
     if isDebug: print('char_dict:', char_dict)
@@ -111,10 +111,10 @@ if __name__ == '__main__':
     train_x = torch.matmul(tr_char_onehot, word_emb_matrix)
     train_y = torch.tensor(tr_labels)
     test_x = torch.matmul(ts_char_onehot, word_emb_matrix)
-
     if isDebug: print('train_x:', train_x.shape)
-    net = model.CNN(6).to(device)
 
+    # sentence classification
+    net = model.CNN(6).to(device)
     criterion = nn.CrossEntropyLoss()
 
     for epoch in range(args.epochs):
