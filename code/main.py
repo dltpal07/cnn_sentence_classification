@@ -5,14 +5,19 @@ import torch.nn as nn
 import argparse
 import torch.optim as optim
 import csv
+import os
 parser = argparse.ArgumentParser()
 parser.add_argument('--gpu-num', default=0, type=int)
-parser.add_argument('--epochs', default=10, type=int)
+parser.add_argument('--epochs', default=20, type=int)
 parser.add_argument('--batch-size', default=32, type=int)
 args = parser.parse_args()
 device = torch.device(f'cuda:{args.gpu_num}')
+result_path = '../result'
 
-def output2csv(pred_y, file_name='20214031_leesemi_simple_seq.answer.csv'):
+isDebug = True
+
+def output2csv(pred_y, file_name=os.path.join(result_path, 'sent_class.pred.csv')):
+    os.makedirs(result_path, exist_ok=True)
     with open(file_name, 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(['id', 'pred'])
@@ -80,33 +85,34 @@ if __name__ == '__main__':
     # load data
     tr_sents, tr_labels = utils.load_data(file_path='../data/sent_class.train.csv')
     ts_sents, ts_labels = utils.load_data(file_path='../data/sent_class.test.csv')
-    print('load_data:', tr_sents[:3])
+    if isDebug: print('load_data:', tr_sents[:3])
 
     # # tokenization
     tr_tokens = utils.tokenization(tr_sents)
     ts_tokens = utils.tokenization(ts_sents)
-    print('tokenization:', tr_tokens[:3])
+    if isDebug: print('tokenization:', tr_tokens[:3])
     #
     # # lemmatization
     tr_lemmas = utils.lemmatization(tr_tokens)
     ts_lemmas = utils.lemmatization(ts_tokens)
-    print('lemmatization:', tr_lemmas[:3])
+    if isDebug: print('lemmatization:', tr_lemmas[:3])
     #
     # # character one-hot representation
     char_dict = utils.make_char_dict(tr_lemmas)
     vocab_size = char_dict.__len__()
-    print('char_dict:', char_dict)
+    if isDebug: print('char_dict:', char_dict)
     tr_char_onehot = utils.char_onehot(tr_lemmas, char_dict).to(device)
     ts_char_onehot = utils.char_onehot(ts_lemmas, char_dict).to(device)
-    print(tr_char_onehot.shape)
+    if isDebug: print('tr_char_onehot:', tr_char_onehot.shape)
     dim = 100
     word_emb_matrix = nn.Parameter(torch.Tensor(vocab_size, dim)).to(device)
     nn.init.kaiming_uniform_(word_emb_matrix)
+
     train_x = torch.matmul(tr_char_onehot, word_emb_matrix)
     train_y = torch.tensor(tr_labels)
     test_x = torch.matmul(ts_char_onehot, word_emb_matrix)
 
-    print(train_x.shape)
+    if isDebug: print('train_x:', train_x.shape)
     net = model.CNN(6).to(device)
 
     criterion = nn.CrossEntropyLoss()
