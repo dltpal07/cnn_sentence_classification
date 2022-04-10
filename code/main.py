@@ -10,10 +10,10 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--gpu-num', default=0, type=int)
 parser.add_argument('--epochs', default=20, type=int)
 parser.add_argument('--batch-size', default=32, type=int)
+parser.add_argument('--lr', default=0.0001, type=float)
 args = parser.parse_args()
 device = torch.device(f'cuda:{args.gpu_num}')
 result_path = '../result'
-
 isDebug = True
 
 def output2csv(pred_y, file_name=os.path.join(result_path, 'sent_class.pred.csv')):
@@ -34,7 +34,7 @@ def train(train_x, train_y, epoch):
     correct = 0
     net.train()
 
-    optimizer = optim.Adam(net.parameters(), lr=0.0001)
+    optimizer = optim.Adam(net.parameters(), lr=args.lr)
     batch_size = args.batch_size
     iteration = (len(train_x) // batch_size) + 1
     cur_i = 0

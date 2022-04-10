@@ -19,16 +19,6 @@ class CNN(nn.Module):
         self.bn = nn.BatchNorm2d(100)
         self.relu = nn.ReLU(True)
 
-        # self.classifier = nn.Sequential(
-        #     nn.Linear(vocab_size * 20, 1000),
-        #     nn.ReLU(True),
-        #     nn.Dropout(),
-        #     nn.Linear(1000, 100),
-        #     nn.ReLU(True),
-        #     nn.Dropout(),
-        #     nn.Linear(100, 19),
-        # )
-
     def forward(self, x):
         feature_vector = x.view(x.size(0), x.size(1), -1)
         feature_vector = feature_vector.unsqueeze(1)
