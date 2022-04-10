@@ -1,0 +1,13 @@
+nlp_lab2_semilee_20214031/
+├── code
+│   ├── run.sh
+│   ├── main.py
+│   ├── model.py
+│   └── utils.py
+├── command.txt
+├── data
+│   ├── sent_class.test.csv
+│   └── sent_class.train.csv
+├── README.md
+└── result
+    └── sent_class.pred.csv
