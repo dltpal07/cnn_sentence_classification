@@ -8,5 +8,6 @@
 
 ## train the model
 ~~~
-python main.py
+cd code
+./run.sh
 ~~~
